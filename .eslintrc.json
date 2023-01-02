@@ -11,5 +11,8 @@
     },
     "rules": {
         "no-console": "off"
+    },
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
     }
 }
