@@ -1,6 +1,8 @@
 // mengelola resource notes yang disimpan pada memory(array)
 
-const {nanoid} = require('nanoid')
+const {nanoid} = require('nanoid');
+const InvariantError = require('../exceptions/InvariantError');
+const NotFoundError = require('../exceptions/NotFoundError');
 class NotesServices {
     constructor() {
         this._notes = []
@@ -25,7 +27,7 @@ class NotesServices {
         const isSusccess = this._notes.filter((note) => note.id === id ).length > 0;
 
         if (!isSusccess){
-            throw new Error('catatan gagal ditambahkan');
+            throw new InvariantError('catatan gagal ditambahkan');
         }
         
         return id
@@ -43,7 +45,7 @@ class NotesServices {
         const note = this._notes.filter((n)=> n.id === id)[0];
 
         if(!note) {
-            throw new Error ('Catatan tidak ditemukan')
+            throw new NotFoundError('Catatan tidak ditemukan')
         }
         return note
 
@@ -54,7 +56,7 @@ class NotesServices {
         const index = this._notes.findIndex((note) => note.id === id)
 
         if (index === -1){
-            throw new Error('gagal memperbarui catatan, id tidak ditemukan')
+            throw new NotFoundError('gagal memperbarui catatan, id tidak ditemukan')
 
         }
 
@@ -74,7 +76,7 @@ class NotesServices {
         const index = this._notes.findIndex((note) => note.id === id)
 
         if (index === -1){
-            throw new Error('Catatan gagal dihapus, Id tidak ditemukan')
+            throw new NotFoundError('Catatan gagal dihapus, Id tidak ditemukan')
             
         }
 
