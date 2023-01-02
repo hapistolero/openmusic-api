@@ -1,0 +1,1 @@
+// mengelola resource notes yang disimpan pada memory(array)
