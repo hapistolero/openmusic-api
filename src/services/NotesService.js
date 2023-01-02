@@ -19,7 +19,7 @@ class NotesServices {
             title, tags, body, id, createdAt, updateAt,
         }
 
-        this._notes.push(newNotes);
+        this._notes.push(newNote);
 
         //memastikan newNote masuk ke dalam array notes
         const isSusccess = this._notes.filter((note) => note.id === id ).length > 0;
@@ -39,11 +39,11 @@ class NotesServices {
     }
 
     //ambil berdasarkan id
-    getNotesById(id){
+    getNoteById(id){
         const note = this._notes.filter((n)=> n.id === id)[0];
 
         if(!note) {
-            throw new Error ('catatan tidak ditemukan')
+            throw new Error ('Catatan tidak ditemukan')
         }
         return note
 
@@ -74,7 +74,7 @@ class NotesServices {
         const index = this._notes.findIndex((note) => note.id === id)
 
         if (index === -1){
-            throw new Error('catatan gagal dihapus, id tidiak ditemukan')
+            throw new Error('Catatan gagal dihapus, Id tidak ditemukan')
             
         }
 
