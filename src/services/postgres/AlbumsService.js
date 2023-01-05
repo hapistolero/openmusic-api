@@ -1,7 +1,7 @@
 const {Pool} = require('pg');
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
-const { mapDBToModel } = require('../../utils');
+const { mapDBToModel,mapDBToModel1 } = require('../../utils');
 const {nanoid} = require('nanoid');
 
 class AlbumsService {
@@ -27,18 +27,30 @@ class AlbumsService {
       }
 
       async getAlbumById(id) {
+        
         const query = {
-            text: 'SELECT * FROM albums where id = $1',
+            text: 'SELECT * from albums where id = $1',
             values: [id],
 
         }
+       
         const result = await this._pool.query(query)
-
+        
         if(!result.rows.length){
-            throw new NotFoundError('Catatan tidak ditemukan')
-        }
-        console.log(result.rows.map(mapDBToModel)[0])
+            throw new NotFoundError('Album tidak ditemukan')
+        }        
         return result.rows.map(mapDBToModel)[0]
+    }
+
+    async getSongByIdAlbum(id){
+        const query1 = {
+            text: 'SELECT * FROM songs where "albumId" = $1',
+            values: [id],
+
+        }
+        const result1 = await this._pool.query(query1)
+
+        return result1.rows.map(({id, title, performer}) => ({id, title, performer}))
     }
 
     async editAlbumById(id, {name, year}) {
@@ -57,7 +69,7 @@ class AlbumsService {
 
     }
 
-    async deleteAlbumByIdHandler(id){
+    async deleteAlbumById(id){
         const query = {
             text: 'DELETE FROM albums where id = $1 returning id',
             values: [id],

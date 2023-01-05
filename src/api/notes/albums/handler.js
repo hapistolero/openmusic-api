@@ -1,12 +1,19 @@
+const ClientError = require("../../../exceptions/ClientError")
 
 class AlbumsHandler {
     constructor (service, validator){
         this._service = service
         this._validator = validator
+
+        this.postAlbumHandler = this.postAlbumHandler.bind(this)       
+        this.getAlbumByIdHandler= this.getAlbumByIdHandler.bind(this)
+        this.putAlbumByIdHandler = this.putAlbumByIdHandler.bind(this)
+        this.deleteAlbumByIdHandler = this.deleteAlbumByIdHandler.bind(this)
+
     }
 
   async  postAlbumHandler(request, h){
-        try {
+        try {            
             this._validator.validateAlbumPayload(request.payload)
             
             const {name = 'untitled', year} = request.payload
@@ -25,6 +32,24 @@ class AlbumsHandler {
             response.code(201)
             return response
         } catch (error) {
+
+            if ( error instanceof ClientError){
+                const response = h.response({
+                    status: 'fail',
+                    message: error.message,
+                })
+                response.code(error.statusCode)                                
+                return response
+            }
+
+            //error server
+
+            const response = h.response({
+                status: 'error',
+                message: 'Maaf, terjadi kegagalan pada server kami.'
+            });
+            response.code(500)
+            return response
             
         }
     }
@@ -33,10 +58,13 @@ class AlbumsHandler {
         try {
             const {id} = request.params;
         const album = await this._service.getAlbumById(id)
+        const songs = await this._service.getSongByIdAlbum(id)
+        album.songs = songs
+        
         return{
             status: 'success',
             data:{
-                album,
+               album:album
             }
         }            
         } catch (error) {
@@ -53,7 +81,7 @@ class AlbumsHandler {
 
             const response = h.response({
                 status: 'error',
-                message: 'Maaf, terjadi legagalan pada server kami.'
+                message: 'Maaf, terjadi kegagalan pada server kami.'
             });
             response.code(500)
             return response

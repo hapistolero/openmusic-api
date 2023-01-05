@@ -1,46 +1,44 @@
-const ClientError = require("../../exceptions/ClientError")
+const song = require(".")
+const ClientError = require("../../../exceptions/ClientError")
 
-class NotesHandler {
-    constructor(service, validator){
+class SongsHandler {
+    constructor (service, validator){
         this._service = service
         this._validator = validator
 
-        this.postNoteHandler = this.postNoteHandler.bind(this)
-        this.getNotesHandler = this.getNotesHandler.bind(this)
-        this.getNoteByIdHandler= this.getNoteByIdHandler.bind(this)
-        this.putNoteByIdHandler = this.putNoteByIdHandler.bind(this)
-        this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this)
+        this.postSongHandler = this.postSongHandler.bind(this)        
+        this.getSongByIdHandler= this.getSongByIdHandler.bind(this)
+        this.getSongsHandler= this.getSongHandler.bind(this)
+        this.putSongByIdHandler = this.putSongByIdHandler.bind(this)
+        this.deleteSongByIdHandler = this.deleteSongByIdHandler.bind(this)
     }
 
-   async postNoteHandler(request, h){
-    
+  async  postSongHandler(request, h){
         try {
+            this._validator.validateSongPayload(request.payload)
             
-            this._validator.validateNotePayload(request.payload)
-            
-            const {title = 'untitled', body, tags} = request.payload
-            
-            const noteId = await this._service.addNote({title, body, tags})
-        
+            const {title = 'untitled', year, genre, performer, duration, albumId='unlisted'} = request.payload
+           
+            const songId = await this._service.addSong({title, year, genre, performer, duration, albumId})
+                   
            
     
             const response = h.response({
                 status: 'success',
-                message: 'Catatan berhasil ditambahkan',
+                message: 'Lagu berhasil ditambahkan',
                 data: {
-                    noteId,
+                    songId,
                 }
             });
-            response.code(201)
+            response.code(201)                      
             return response
-            
         } catch (error) {
             if ( error instanceof ClientError){
                 const response = h.response({
                     status: 'fail',
                     message: error.message,
                 })
-                response.code(error.statusCode)                                
+                response.code(error.statusCode)                                             
                 return response
             }
 
@@ -52,30 +50,36 @@ class NotesHandler {
             });
             response.code(500)
             return response
+            
+            
         }
-       
-       
     }
 
-   async getNotesHandler(){
-        const notes = await this._service.getNotes()
-        return{
+    async getSongHandler(request,h){
+        const{title, performer}= request.query;
+        const songs = await this._service.getSongs({title, performer})      
+        return{ 
             status: 'success',
             data:{
-                notes,
+                songs: songs.map(({id, title, performer}) => ({id, title, performer}) )           
+
+                
+               
             }
+            
         }
 
     }
 
-    async getNoteByIdHandler(request, h){
+    async getSongByIdHandler(request, h){
         try {
             const {id} = request.params;
-        const note = await this._service.getNoteById(id)
+           
+        const song = await this._service.getSongById(id)
         return{
             status: 'success',
             data:{
-                note,
+                song:song,
             }
         }            
         } catch (error) {
@@ -92,7 +96,7 @@ class NotesHandler {
 
             const response = h.response({
                 status: 'error',
-                message: 'Maaf, terjadi legagalan pada server kami.'
+                message: 'Maaf, terjadi Kegagalan pada server kami.'
             });
             response.code(500)
             return response
@@ -100,18 +104,18 @@ class NotesHandler {
         
     }
 
-    async putNoteByIdHandler(request, h){
+    async putSongByIdHandler(request, h){
 
         try {
-            this._validator.validateNotePayload(request.payload)
+            this._validator.validateSongPayload(request.payload)
             const {id} = request.params
-            await this._service.editNoteById(id, request.payload)
+            await this._service.editSongById(id, request.payload)
+            
 
         return {
             status: 'success',
-            message: 'Catatan berhasil diperbarui',
+            message: 'Lagu berhasil diperbarui',
         }
-
             
         } catch (error) {
             if ( error instanceof ClientError){
@@ -127,7 +131,7 @@ class NotesHandler {
 
             const response = h.response({
                 status: 'error',
-                message: 'Maaf, terjadi legagalan pada server kami.'
+                message: 'Maaf, terjadi Kegagalan pada server kami.'
             });
             response.code(500)
             return response
@@ -137,13 +141,15 @@ class NotesHandler {
 
     }
 
-   async deleteNoteByIdHandler(request, h){        
+    async deleteSongByIdHandler(request, h){        
         try {
+            
             const {id} = request.params;
-           await this._service.deleteNoteById(id);
+           await this._service.deleteSongById(id);
+           
             return{
                 status: 'success',
-                message: 'Catatan berhasil dihapus'
+                message: 'Lagu berhasil dihapus'
             }
         } catch (error) {
             if ( error instanceof ClientError){
@@ -169,4 +175,4 @@ class NotesHandler {
 
 }
 
-module.exports = NotesHandler;
+module.exports = SongsHandler
