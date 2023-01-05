@@ -1,8 +1,8 @@
 // berkas penampung kode untuk membuat , mengkonfigurasi, dan menjalankan http server
 require('dotenv').config();
 const Hapi = require('@hapi/hapi');
-const albums = require('./api/notes/albums')
-const songs = require('./api/notes/song')
+const albums = require('./api/albums')
+const songs = require('./api/song')
 const AlbumsService = require('./services/postgres/AlbumsService')
 const SongsService = require('./services/postgres/SongsService')
 const AlbumsValidator = require('./validator/albums')
