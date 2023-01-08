@@ -5,6 +5,7 @@ class SongsHandler {
     constructor (service, validator){
         this._service = service
         this._validator = validator
+        console.log(1)
 
         this.postSongHandler = this.postSongHandler.bind(this)        
         this.getSongByIdHandler= this.getSongByIdHandler.bind(this)

@@ -4,6 +4,7 @@ class AlbumsHandler {
     constructor (service, validator){
         this._service = service
         this._validator = validator
+        
 
         this.postAlbumHandler = this.postAlbumHandler.bind(this)       
         this.getAlbumByIdHandler= this.getAlbumByIdHandler.bind(this)
@@ -13,7 +14,8 @@ class AlbumsHandler {
     }
 
   async  postAlbumHandler(request, h){
-        try {            
+        try {      
+            console.log(1)      
             this._validator.validateAlbumPayload(request.payload)
             
             const {name = 'untitled', year} = request.payload

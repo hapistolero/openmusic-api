@@ -20,10 +20,10 @@ class AuthenticationsServices {
     async verifyRefreshToken(token) {
         const query = {
             text: 'select token from authentications where token = $1',
-
+            values:[token]
         }
 
-       result =  await this._pool.query(query)
+      const result =  await this._pool.query(query)
 
         if(!result.rows.length){
             throw new InvariantError('Refresh Token Tidak Valid')

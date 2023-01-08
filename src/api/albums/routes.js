@@ -3,16 +3,15 @@ const routes =(handler) =>[
         method: 'POST',
         path: '/albums',
         handler: handler.postAlbumHandler,
-        option: {
+        options: {
             auth: 'openmusic_api_jwt'
         },
-
     },
     {
         method: 'GET',
         path: '/albums/{id}',
         handler:  handler.getAlbumByIdHandler,
-        option: {
+        options: {
             auth: 'openmusic_api_jwt'
         },
      },
@@ -20,7 +19,7 @@ const routes =(handler) =>[
         method: 'PUT',
         path: '/albums/{id}',
         handler: handler.putAlbumByIdHandler,
-        option: {
+        options: {
             auth: 'openmusic_api_jwt'
         },
     },
@@ -28,7 +27,7 @@ const routes =(handler) =>[
         method: 'DELETE',
         path: '/albums/{id}',
         handler: handler.deleteAlbumByIdHandler,
-        option: {
+        options: {
             auth: 'openmusic_api_jwt'
         },
     }

@@ -11,10 +11,11 @@ class UsersService {
         this._pool = new Pool();
     }
 
-    async addUSer({
+    async addUser({
         username, password, fullname
     }){
-        await this.verifyNewUsername(username)
+       
+            await this.verifyNewUsername(username)
         
         const id = `user-${nanoid(16)}`
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -23,28 +24,40 @@ class UsersService {
             values:[id, username,hashedPassword,fullname]
 
         }
-
+       
         const result = await this._pool.query(query)
 
-        if(!result.rows.lenght){
+        if(!result.rows.length){
             throw new InvariantError('User gagal ditambahkan')
         }
 
         return result.rows[0].id
+       
+        
         
     }
 
     async verifyNewUsername(username) {
-        const query = {
-            text: 'SELECT username from users where username =$1',
-            values: [username],
-        }
-
-        const result = await this._pool.query(query)
-
-        if(result.rows.length >0){
-            throw new InvariantError('Gagal menambahkan eror. Username sudah ada')
-        }
+        
+            const query = {
+                text: 'SELECT username from users where username =$1',
+                values: [username],
+            }
+           
+            const result = await this._pool.query(query)
+            
+            
+           
+    
+            if(result.rows.length > 0){
+                console.log('cok jaran')
+                throw new InvariantError('Gagal menambahkan eror. Username sudah ada')
+            }
+            
+        
+       
+      
+    
     }
 
     async getUserById(userId){

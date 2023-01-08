@@ -1,25 +1,29 @@
 
+class UsersHandler {
 
-
-class UserHandler {
     constructor(service, validator){
         this._service = service
-        this._validator = validator
+        this._validator = validator        
+        this.postUserHandler = this.postUserHandler.bind(this);
+        
     }
 
     async postUserHandler(request, h){
+       
+        
         this._validator.validateUserPayload(request.payload)
+        console.log(3)
         const {username, password, fullname} = request.payload
-
         const userId = await this._service.addUser({username, password, fullname})
-
-        const response = h.request({
+       
+        const response = h.response({
             status:'success',
             message: 'User berhasil ditambahkan',
             data:{
                 userId,
             }
         })
+        response.code(201)
         return response
 
     }
@@ -39,4 +43,4 @@ class UserHandler {
 
 }
 
-module.exports = UserHandler
+module.exports = UsersHandler

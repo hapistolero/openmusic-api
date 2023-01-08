@@ -4,7 +4,7 @@ const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt')
 const albums = require('./api/albums')
 const songs = require('./api/song');
-const users = require('./api/users')
+const users = require('./api/users');
 const ClientError = require('./exceptions/ClientError');
 const AlbumsService = require('./services/postgres/AlbumsService')
 const SongsService = require('./services/postgres/SongsService')
@@ -17,14 +17,15 @@ const usersValidator = require('./validator/users')
 const authentications = require('./api/authentications')
 const AuthenticationService = require('./services/postgres/AuthenticationsServices')
 const TokenManager = require('./tokenize/TokenManager')
-const AuthenticationsValidator = require('./validator/authentications')
+const AuthenticationsValidator = require('./validator/authentications');
+const InvariantError = require('./exceptions/InvariantError');
 
 
 const init = async () => {
   const albumsService = new AlbumsService()
   const songsService = new SongsService()
   const usersService = new UsersService()
-  const authenticationsServices = new AuthenticationService
+  const authenticationsServices = new AuthenticationService()
   const server = Hapi.server({
     port: process.env.PORT,
     host: process.env.HOST,
@@ -58,27 +59,38 @@ const init = async () => {
   })
 
   await server.register({
-    plugin: albums,
-    options: {
-      service: albumsService,
-      validator: AlbumsValidator
-    },
     plugin: songs,
     options: {
       service: songsService,
       validator: SongsValidator
     },
+
+  })
+
+  await server.register({
     plugin: users,
     options: {
       service: usersService,
       validator: usersValidator
     },
+
+  })
+
+  await server.register({
     plugin: authentications,
     options: {
-      authenticationsServices,
-      usersService,
+      authenticationsService:authenticationsServices,
+      usersService:usersService,
       tokenManager: TokenManager,
       validator: AuthenticationsValidator,
+    },
+  })
+
+  await server.register({
+    plugin: albums,
+    options: {
+      service: albumsService,
+      validator: AlbumsValidator
     },
 
   })
@@ -88,22 +100,40 @@ const init = async () => {
     const {response} = request
 
     if(response instanceof Error){
+      console.log(response.message)
+      
 
       if (response instanceof ClientError){
+        console.log(4)
         const clientResponseError = h.response({
           status: 'fail',
           message: response.message,
         })
+        
         clientResponseError.code(response.statusCode)
         return clientResponseError
+      }
+
+      if (response instanceof InvariantError){
+        
+        const InvariantErrorResponse = h.response({
+          status: 'fail',
+          message: response.message,
+        })
+        
+        InvariantErrorResponse.code(response.statusCode)
+        return InvariantErrorResponse
       }
 
       if(!response.isServer){
         return h.continue
       }
 
+      
+      
+
       const serverResponseError =h.response({
-        status: error,
+        status: 'error',
         message: 'terjadi kegagalan pada server kami'
       })
       serverResponseError.code(500)
