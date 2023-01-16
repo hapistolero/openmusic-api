@@ -14,7 +14,7 @@ exports.up = pgm => {
         },
         owner:{
             type:'VARCHAR(50)',
-            foreignKey: true
+             notNull: true
         }
     })
 };

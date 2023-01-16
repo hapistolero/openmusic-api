@@ -27,9 +27,13 @@ exports.up = pgm => {
 
     pgm.addConstraint('collaborations','fk_collaborations.playlist_id_playlist.id','Foreign key(playlist_id) References playlist(id) on delete cascade')
     pgm.addConstraint('collaborations','fk_collaborations.user_id_users.id','Foreign key(user_id) References users(id) on delete cascade')
-    pgm.addConstraint('collaborations','fk_collaborations.song_id_songs.id','Foreign key(song_id) References songs(id) on delete cascade')
+    
 };
 
 exports.down = pgm => {
+    pgm.dropConstraint('collaborations','unique_playlist_id_user_id_and_song_id')
+    pgm.dropConstraint('collaborations','fk_collaborations.playlist_id_playlist.id')
+    pgm.dropConstraint('collaborations','fk_collaborations.user_id_users.id')    
+
     pgm.dropTable('collaborations')
 };

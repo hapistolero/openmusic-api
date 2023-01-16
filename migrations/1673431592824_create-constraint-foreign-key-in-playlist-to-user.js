@@ -1,7 +1,6 @@
 
 
-exports.up = pgm => {
-    pgm.addConstraint('playlist','unique_owner','UNIQUE(owner)')
+exports.up = pgm => {    
    
        pgm.addConstraint('playlist','fk_playlist.owner_users.id','Foreign key(owner) References users(id) on delete cascade')
    
@@ -9,6 +8,7 @@ exports.up = pgm => {
    };
    
    exports.down = pgm => {
-       pgm.dropConstraint('fk_playlist.owner_users.id')
+       pgm.dropConstraint('playlist','fk_playlist.owner_users.id')
+
    };
    
