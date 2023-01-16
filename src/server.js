@@ -18,13 +18,32 @@ const authentications = require('./api/authentications')
 const AuthenticationService = require('./services/postgres/AuthenticationsServices')
 const TokenManager = require('./tokenize/TokenManager')
 const AuthenticationsValidator = require('./validator/authentications');
+
+const collaborations = require('./api/collaborations')
+const CollaborationsValidator = require('./validator/collaborations')
+const CollaborationsService = require('./services/postgres/CollaborationsService');
+
+const Playlist = require('./api/playlist')
+const PlaylistService = require('./services/postgres/PlaylistService')
+const PlaylistValidator = require('./validator/playlist')
+
+const PlaylistSongs = require('./api/playlistsongs')
+const PlaylistSongsService = require('./services/postgres/PlaylistSongsService')
+const PlaylistSongsValidator = require('./validator/playlistsongs')
+
 const InvariantError = require('./exceptions/InvariantError');
 
 
+
+
 const init = async () => {
+  const collaborationsService = new CollaborationsService()
   const albumsService = new AlbumsService()
   const songsService = new SongsService()
   const usersService = new UsersService()
+  const playlistService = new PlaylistService(collaborationsService)
+  const playlistSongsService = new PlaylistSongsService()
+  
   const authenticationsServices = new AuthenticationService()
   const server = Hapi.server({
     port: process.env.PORT,
@@ -95,16 +114,39 @@ const init = async () => {
 
   })
 
+  await server.register({
+    plugin: collaborations,
+    options: {
+      collaborationsService:collaborationsService,
+      playlistService:playlistService,
+      validator: CollaborationsValidator,
+    },
+
+  })
+
+  await server.register({
+    plugin:Playlist,
+    options:{
+      playlistService:playlistService,
+      usersService,
+      validator:PlaylistValidator,
+    }
+  })
+
+  await server.register({
+    plugin: PlaylistSongs,
+    options: {
+      playlistSongsService:playlistSongsService,
+      playlistService:playlistService,
+      validator: PlaylistSongsValidator,
+    }
+  })
 
   server.ext('onPreResponse',(request, h)=>{
     const {response} = request
 
-    if(response instanceof Error){
-      console.log(response.message)
-      
-
-      if (response instanceof ClientError){
-        console.log(4)
+    if(response instanceof Error){          
+      if (response instanceof ClientError){       
         const clientResponseError = h.response({
           status: 'fail',
           message: response.message,

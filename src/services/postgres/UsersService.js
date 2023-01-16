@@ -49,8 +49,7 @@ class UsersService {
             
            
     
-            if(result.rows.length > 0){
-                console.log('cok jaran')
+            if(result.rows.length > 0){               
                 throw new InvariantError('Gagal menambahkan eror. Username sudah ada')
             }
             

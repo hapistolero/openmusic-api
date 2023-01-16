@@ -15,7 +15,7 @@ class AlbumsHandler {
 
   async  postAlbumHandler(request, h){
         try {      
-            console.log(1)      
+                 
             this._validator.validateAlbumPayload(request.payload)
             
             const {name = 'untitled', year} = request.payload

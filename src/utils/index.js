@@ -29,4 +29,14 @@ const mapDBToModel1 =({
     }
 )
 
-module.exports = {mapDBToModel, mapDBToModel1}
+const mapGetPlaylist = ({ id, name, username }) => ({
+    id, name, username,
+  });
+
+  const mapGetPlaylistActivitiesDBToModel = ({
+    username, title, action, time,
+  }) => ({
+    username, title, action, time,
+  });
+
+module.exports = {mapDBToModel, mapDBToModel1, mapGetPlaylist, mapGetPlaylistActivitiesDBToModel}
