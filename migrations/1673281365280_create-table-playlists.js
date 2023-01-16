@@ -1,24 +1,38 @@
+/* eslint-disable linebreak-style */
+exports.up = (pgm) => {
+    pgm.createTable("playlist",
 
+        {
 
-exports.up = pgm => {
-    pgm.createTable('playlist',
-    {
-        id: {
-            type:'VARCHAR(50)',
-            primaryKey: true,
-            notNull:true
-        },
-        name:{
-            type:'VARCHAR(50)',
-            notNull:true
-        },
-        owner:{
-            type:'VARCHAR(50)',
-             notNull: true
-        }
-    })
+            id: {
+
+                type: "VARCHAR(50)",
+
+                primaryKey: true,
+
+                notNull: true,
+
+            },
+
+            name: {
+
+                type: "VARCHAR(50)",
+
+                notNull: true,
+
+            },
+
+            owner: {
+
+                type: "VARCHAR(50)",
+
+                notNull: true,
+
+            },
+
+        });
 };
 
-exports.down = pgm => {
-    pgm.dropTable('playlist')
+exports.down = (pgm) => {
+    pgm.dropTable("playlist");
 };

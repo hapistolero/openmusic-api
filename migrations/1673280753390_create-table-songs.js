@@ -1,40 +1,62 @@
-exports.up = pgm => {
-   
-    pgm.createTable('songs',{
+/* eslint-disable linebreak-style */
+exports.up = (pgm) => {
+    pgm.createTable("songs", {
+
         id: {
-            type: 'VARCHAR(50)',
+
+            type: "VARCHAR(50)",
+
             primaryKey: true,
-        },
-        title: {
-            type: 'TEXT',
-            notNull: true,
-        },
-        year: {
-            type: 'INTEGER',
-            notNull: true,
-        },
-        genre: {
-            type: 'VARCHAR(50)',
-            notNull: true,
-        },
-        performer: {
-            type: 'VARCHAR(50)',
-            notNull: true,
-        },
-        duration: {
-            type: 'INTEGER',
-           
-        },
-        albumId: {
-            type: 'VARCHAR(50)',            
+
         },
 
-        
+        title: {
+
+            type: "TEXT",
+
+            notNull: true,
+
+        },
+
+        year: {
+
+            type: "INTEGER",
+
+            notNull: true,
+
+        },
+
+        genre: {
+
+            type: "VARCHAR(50)",
+
+            notNull: true,
+
+        },
+
+        performer: {
+
+            type: "VARCHAR(50)",
+
+            notNull: true,
+
+        },
+
+        duration: {
+
+            type: "INTEGER",
+
+        },
+
+        albumId: {
+
+            type: "VARCHAR(50)",
+
+        },
 
     });
 };
 
-exports.down = pgm => {
-    
-    pgm.dropTable('songs')
+exports.down = (pgm) => {
+    pgm.dropTable("songs");
 };
