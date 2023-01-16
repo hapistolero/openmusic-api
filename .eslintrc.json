@@ -10,10 +10,12 @@
         "ecmaVersion": 2020
     },
     "rules": {
-        "no-console": "off"
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
+        "no-console": "off",
+        "quotes": [2, "double", { "avoidEscape": true }],
+        "no-underscore-dangle":"off",
+        "linebreak-style": ["error", "windows"],
+        "indent": ["error", 4]
+
     }
     
 }

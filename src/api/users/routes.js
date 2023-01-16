@@ -1,15 +1,14 @@
-
 const routes = (handler) => [
     {
-        method: 'POST',
-        path: '/users',
-        handler: (request, h) => handler.postUserHandler(request,h),
+        method: "POST",
+        path: "/users",
+        handler: (request, h) => handler.postUserHandler(request, h),
     },
     {
-        method: 'GET',
-        path: '/users/{id}',
+        method: "GET",
+        path: "/users/{id}",
         handler: () => handler.getUserByIdHandler(),
-    }
-]
+    },
+];
 
-module.exports = routes
+module.exports = routes;

@@ -1,15 +1,15 @@
-const mapDBToModel =({
+const mapDBToModel = ({
     id,
     name,
     year,
-}) =>({
+}) => ({
     id,
     name,
     year,
 
-})
+});
 
-const mapDBToModel1 =({
+const mapDBToModel1 = ({
     id,
     title,
     year,
@@ -17,7 +17,7 @@ const mapDBToModel1 =({
     genre,
     duration,
     albumId,
-}) =>(
+}) => (
     {
         id,
         title,
@@ -25,18 +25,20 @@ const mapDBToModel1 =({
         performer,
         genre,
         duration,
-        albumId:albumId, 
+        albumId,
     }
-)
+);
 
 const mapGetPlaylist = ({ id, name, username }) => ({
     id, name, username,
-  });
+});
 
-  const mapGetPlaylistActivitiesDBToModel = ({
+const mapGetPlaylistActivitiesDBToModel = ({
     username, title, action, time,
-  }) => ({
+}) => ({
     username, title, action, time,
-  });
+});
 
-module.exports = {mapDBToModel, mapDBToModel1, mapGetPlaylist, mapGetPlaylistActivitiesDBToModel}
+module.exports = {
+    mapDBToModel, mapDBToModel1, mapGetPlaylist, mapGetPlaylistActivitiesDBToModel,
+};
