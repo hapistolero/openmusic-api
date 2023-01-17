@@ -29,17 +29,9 @@ exports.up = (pgm) => {
 
         },
 
-        song_id: {
-
-            type: "VARCHAR(50)",
-
-            notNull: true,
-
-        },
-
     });
 
-    pgm.addConstraint("collaborations", "unique_playlist_id_user_id_and_song_id", "UNIQUE(playlist_id, user_id, song_id)");
+    pgm.addConstraint("collaborations", "unique_playlist_id_and_user_id", "UNIQUE(playlist_id, user_id)");
 
     pgm.addConstraint("collaborations", "fk_collaborations.playlist_id_playlist.id", "Foreign key(playlist_id) References playlist(id) on delete cascade");
 
@@ -47,7 +39,7 @@ exports.up = (pgm) => {
 };
 
 exports.down = (pgm) => {
-    pgm.dropConstraint("collaborations", "unique_playlist_id_user_id_and_song_id");
+    pgm.dropConstraint("collaborations", "unique_playlist_id_and_user_id");
 
     pgm.dropConstraint("collaborations", "fk_collaborations.playlist_id_playlist.id");
 

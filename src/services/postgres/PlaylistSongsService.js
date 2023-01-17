@@ -134,6 +134,7 @@ class playlistSongsService {
         right join users on users.id = playlist_song_activities.user_id
         right join songs on songs.id = playlist_song_activities.song_id
         where playlist_song_activities.playlist_id = $1
+        order by playlist_song_activities.time asc
         `,
             values: [playlistId],
         };
