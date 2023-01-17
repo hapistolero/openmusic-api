@@ -12,7 +12,7 @@ exports.up = (pgm) => {
 
         username: {
 
-            type: "TEXT",
+            type: "VARCHAR(50)",
 
             notNUll: true,
 

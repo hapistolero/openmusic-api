@@ -5,7 +5,7 @@ exports.up = (pgm) => {
 
         id: {
 
-            type: "TEXT",
+            type: "VARCHAR(50)",
 
             primarykey: true,
 
@@ -13,7 +13,7 @@ exports.up = (pgm) => {
 
         playlist_id: {
 
-            type: "TEXT",
+            type: "VARCHAR(50)",
 
             notNull: true,
 
@@ -21,7 +21,7 @@ exports.up = (pgm) => {
 
         song_id: {
 
-            type: "TEXT",
+            type: "VARCHAR(50)",
 
             notNull: true,
 
@@ -29,7 +29,7 @@ exports.up = (pgm) => {
 
         user_id: {
 
-            type: "TEXT",
+            type: "VARCHAR(50)",
 
             notNull: true,
 
@@ -37,7 +37,7 @@ exports.up = (pgm) => {
 
         action: {
 
-            type: "TEXT",
+            type: "VARCHAR(10)",
 
             notNull: true,
 

@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-exports.shorthands = undefined;
 
 exports.up = (pgm) => {
     pgm.createTable("songsplaylist", {
