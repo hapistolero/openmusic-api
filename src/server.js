@@ -55,6 +55,10 @@ const PlaylistSongsValidator = require("./validator/playlistsongs");
 
 const InvariantError = require("./exceptions/InvariantError");
 
+const _exports = require("./api/exports");
+const ProducerSevice = require("./services/RabbitMQ/ProducerService");
+const ExportsValidator = require("./validator/exports");
+
 const init = async () => {
     const collaborationsService = new CollaborationsService();
 
@@ -231,6 +235,22 @@ const init = async () => {
             playlistService,
 
             validator: PlaylistSongsValidator,
+
+        },
+
+    });
+
+    await server.register({
+
+        plugin: _exports,
+
+        options: {
+
+            service: ProducerSevice,
+
+            playlistService,
+
+            validator: ExportsValidator,
 
         },
 
