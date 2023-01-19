@@ -1,5 +1,3 @@
-const ClientError = require("../../exceptions/ClientError");
-
 class PlaylistHandler {
     constructor(playlistService, usersService, validator) {
         this._playlistService = playlistService;
@@ -12,41 +10,23 @@ class PlaylistHandler {
     }
 
     async postPlaylistHandler(request, h) {
-        try {
-            this._validator.validatePlaylistPayload(request.payload);
-            const { name = "untitled" } = request.payload;
-            const { id: credentialId } = request.auth.credentials;
+        this._validator.validatePlaylistPayload(request.payload);
+        const { name = "untitled" } = request.payload;
+        const { id: credentialId } = request.auth.credentials;
 
-            const playlistId = await this._playlistService.addPlaylist({
-                name, owner: credentialId,
-            });
+        const playlistId = await this._playlistService.addPlaylist({
+            name, owner: credentialId,
+        });
 
-            const response = h.response({
-                status: "success",
-                message: "Playlist berhasil dibuat",
-                data: {
-                    playlistId,
-                },
-            });
-            response.code(201);
-            return response;
-        } catch (error) {
-            if (error instanceof ClientError) {
-                const response = h.response({
-                    status: "fail",
-                    message: error.message,
-                });
-                response.code(error.statusCode);
-                return response;
-            }
-            const response = h.response({
-                status: "error",
-                message: "Maaf, terjadi kegagalan pada server kami.",
-            });
-            response.code(500);
-            console.error(error);
-            return response;
-        }
+        const response = h.response({
+            status: "success",
+            message: "Playlist berhasil dibuat",
+            data: {
+                playlistId,
+            },
+        });
+        response.code(201);
+        return response;
     }
 
     async getPlaylistHandler(request) {
@@ -65,37 +45,17 @@ class PlaylistHandler {
         };
     }
 
-    async deletePlaylistHandler(request, h) {
-        try {
-            const { id } = request.params;
-            const { id: credentialId } = request.auth.credentials;
+    async deletePlaylistHandler(request) {
+        const { id } = request.params;
+        const { id: credentialId } = request.auth.credentials;
 
-            await this._playlistService.verifyPlaylistOwner(id, credentialId);
-            await this._playlistService.deletePlaylistById(id);
+        await this._playlistService.verifyPlaylistOwner(id, credentialId);
+        await this._playlistService.deletePlaylistById(id);
 
-            return {
-                status: "success",
-                message: "Playlist Berhasil dihapus",
-            };
-        } catch (error) {
-            if (error instanceof ClientError) {
-                const response = h.response({
-                    status: "fail",
-                    message: error.message,
-                });
-                response.code(error.statusCode);
-                return response;
-            }
-
-            // Server ERROR!
-            const response = h.response({
-                status: "error",
-                message: "Maaf, terjadi kegagalan pada server kami.",
-            });
-            response.code(500);
-            console.error(error);
-            return response;
-        }
+        return {
+            status: "success",
+            message: "Playlist Berhasil dihapus",
+        };
     }
 }
 
