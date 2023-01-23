@@ -42,17 +42,12 @@ class PlaylistService {
     }
 
     async verifyPlaylistOwner(id, owner) {
-        console.log(id);
-        console.log(owner);
         const query = {
             text: "SELECT owner FROM playlist WHERE id = $1",
             values: [id],
         };
 
-        
         const result = await this._pool.query(query);
-        console.log(result.rows.length)
-
 
         if (!result.rows.length) {
             throw new NotFoundError("Playlist tidak ditemukan");

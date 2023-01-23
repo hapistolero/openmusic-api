@@ -7,6 +7,10 @@ const Hapi = require("@hapi/hapi");
 
 const Jwt = require("@hapi/jwt");
 
+const Inert = require("@hapi/inert");
+
+const path = require("path");
+
 const albums = require("./api/albums");
 
 const songs = require("./api/song");
@@ -56,10 +60,26 @@ const PlaylistSongsValidator = require("./validator/playlistsongs");
 const InvariantError = require("./exceptions/InvariantError");
 
 const _exports = require("./api/exports");
+
 const ProducerSevice = require("./services/RabbitMQ/ProducerService");
+
 const ExportsValidator = require("./validator/exports");
 
+const uploads = require("./api/uploads");
+
+const StorageService = require("./services/storage/StorageService");
+
+const UploadsValidator = require("./validator/uploads");
+
+const albumsLikes = require("./api/albumLikes");
+
+const AlbumsLikesService = require("./services/postgres/AlbumLikeService");
+
+const CacheService = require("./services/redis/CacheService");
+
 const init = async () => {
+    const cacheService = new CacheService();
+
     const collaborationsService = new CollaborationsService();
 
     const albumsService = new AlbumsService();
@@ -73,6 +93,10 @@ const init = async () => {
     const playlistSongsService = new PlaylistSongsService();
 
     const authenticationsServices = new AuthenticationService();
+
+    const storageService = new StorageService(path.resolve(__dirname, "api/uploads/file/images"));
+
+    const albumsLikesService = new AlbumsLikesService(cacheService);
 
     const server = Hapi.server({
 
@@ -98,6 +122,9 @@ const init = async () => {
 
             plugin: Jwt,
 
+        },
+        {
+            plugin: Inert,
         },
 
     ]);
@@ -252,6 +279,35 @@ const init = async () => {
 
             validator: ExportsValidator,
 
+        },
+
+    });
+
+    await server.register({
+
+        plugin: uploads,
+
+        options: {
+
+            service: storageService,
+
+            albumsService,
+
+            validator: UploadsValidator,
+
+        },
+
+    });
+
+    await server.register({
+
+        plugin: albumsLikes,
+
+        options: {
+
+            service: albumsLikesService,
+
+            albumsService,
         },
 
     });
